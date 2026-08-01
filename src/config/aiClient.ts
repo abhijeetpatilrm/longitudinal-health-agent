@@ -363,7 +363,7 @@ class GeminiAiClient implements IAiClient {
 // ─── OpenAI / Groq Client ─────────────────────────────────────
 
 class OpenAiClient implements IAiClient {
-  readonly provider = 'openai';
+  readonly provider: string;
   readonly model: string;
   private readonly openai: OpenAI;
   private readonly options: AiClientOptions;
@@ -371,19 +371,39 @@ class OpenAiClient implements IAiClient {
   constructor(options: AiClientOptions) {
     this.options = options;
     
-    // Auto-detect Groq based on key or provider
-    const isGroq = options.apiKey.startsWith('gsk_') || config.ai.provider === 'openai';
+    // Auto-detect Groq based on key prefix, provider name, or environment variables
+    const apiKey =
+      options.apiKey ||
+      process.env.GROQ_API_KEY ||
+      process.env.OPENAI_API_KEY ||
+      '';
+
+    const isGroq =
+      config.ai.provider === 'groq' ||
+      apiKey.startsWith('gsk_') ||
+      Boolean(process.env.GROQ_API_KEY) ||
+      !apiKey.startsWith('sk-');
+
+    this.provider = isGroq ? 'groq' : 'openai';
     const baseURL = isGroq ? 'https://api.groq.com/openai/v1' : 'https://api.openai.com/v1';
     
-    // Force a valid Groq model to override sticky terminal environment variables (like gemini-1.5-pro)
-    this.model = isGroq ? 'llama-3.3-70b-versatile' : options.modelName;
+    // Default to llama-3.3-70b-versatile for Groq if not explicitly specified or if set to gemini
+    let model = options.modelName || process.env.AI_MODEL_NAME;
+    if (!model || (isGroq && model.startsWith('gemini'))) {
+      model = isGroq ? 'llama-3.3-70b-versatile' : 'gpt-4o';
+    }
+    this.model = model;
     
     this.openai = new OpenAI({
-      apiKey: options.apiKey,
-      baseURL: baseURL
+      apiKey: apiKey,
+      baseURL: baseURL,
     });
     
-    logger.info('[AI] OpenAiClient initialised.', { model: this.model, baseURL });
+    logger.info('[AI] OpenAI/Groq Client initialised.', {
+      provider: this.provider,
+      model: this.model,
+      baseURL,
+    });
   }
 
   private buildMessages(request: AiCompletionRequest): OpenAI.Chat.ChatCompletionMessageParam[] {
@@ -498,6 +518,7 @@ function createAiClient(): IAiClient {
     case 'gemini':
       return new GeminiAiClient(options);
 
+    case 'groq':
     case 'openai':
       return new OpenAiClient(options);
 

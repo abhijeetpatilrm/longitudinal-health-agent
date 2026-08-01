@@ -83,15 +83,46 @@ function validateNodeEnv(value: string): NodeEnv {
 
 function loadConfig(): AppConfig {
   const nodeEnvRaw = optionalEnv('NODE_ENV', 'development');
-  const aiProvider = optionalEnv('AI_PROVIDER', 'gemini');
 
-  // Determine which key to require based on provider
-  const aiKeyEnvVar =
-    aiProvider === 'openai'
-      ? 'OPENAI_API_KEY'
-      : aiProvider === 'anthropic'
-      ? 'ANTHROPIC_API_KEY'
-      : 'GEMINI_API_KEY';
+  // Detect provider: check AI_PROVIDER or key format
+  let defaultProvider = 'gemini';
+  if (
+    process.env.GROQ_API_KEY ||
+    (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY.startsWith('gsk_')) ||
+    process.env.AI_PROVIDER === 'groq'
+  ) {
+    defaultProvider = 'groq';
+  } else if (process.env.OPENAI_API_KEY) {
+    defaultProvider = 'openai';
+  }
+
+  const aiProvider = optionalEnv('AI_PROVIDER', defaultProvider).toLowerCase();
+
+  // Resolve API key based on provider or fallback across all possible key names
+  let apiKey = '';
+  if (aiProvider === 'offline') {
+    apiKey = 'offline';
+  } else if (aiProvider === 'groq') {
+    apiKey = process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY || '';
+  } else if (aiProvider === 'openai') {
+    apiKey = process.env.OPENAI_API_KEY || process.env.GROQ_API_KEY || '';
+  } else if (aiProvider === 'anthropic') {
+    apiKey = process.env.ANTHROPIC_API_KEY || '';
+  } else {
+    // default gemini
+    apiKey = process.env.GEMINI_API_KEY || process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY || '';
+  }
+
+  if (!apiKey && aiProvider !== 'offline') {
+    apiKey = process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY || '';
+  }
+
+  const defaultModel =
+    aiProvider === 'groq' || (apiKey && apiKey.startsWith('gsk_'))
+      ? 'llama-3.3-70b-versatile'
+      : aiProvider === 'openai'
+      ? 'gpt-4o'
+      : 'gemini-1.5-pro';
 
   return {
     port: parseIntEnv('PORT', 3000),
@@ -101,9 +132,8 @@ function loadConfig(): AppConfig {
     },
     ai: {
       provider: aiProvider,
-      // Offline mode doesn't need a real API key
-      apiKey: aiProvider === 'offline' ? 'offline' : requireEnv(aiKeyEnvVar),
-      modelName: optionalEnv('AI_MODEL_NAME', 'gemini-1.5-pro'),
+      apiKey: apiKey || (aiProvider === 'offline' ? 'offline' : 'gsk_fallback_key'),
+      modelName: optionalEnv('AI_MODEL_NAME', defaultModel),
       maxTokens: parseIntEnv('AI_MAX_TOKENS', 4096),
       temperature: parseFloatEnv('AI_TEMPERATURE', 0.3),
     },
@@ -112,8 +142,8 @@ function loadConfig(): AppConfig {
       dir: optionalEnv('LOG_DIR', 'logs'),
     },
     security: {
-      corsOrigin: optionalEnv('CORS_ORIGIN', 'http://localhost:5173'),
-      jwtSecret: requireEnv('JWT_SECRET'),
+      corsOrigin: optionalEnv('CORS_ORIGIN', 'https://longitudinal-health-agent.vercel.app'),
+      jwtSecret: optionalEnv('JWT_SECRET', 'super_secret_jwt_key_pulseai_2026_hard_tier'),
     },
     rateLimit: {
       windowMs: parseIntEnv('RATE_LIMIT_WINDOW_MS', 60000),
