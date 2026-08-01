@@ -16,33 +16,44 @@ import { generalRateLimiter } from './middlewares/rateLimiter';
 export function createApp(): Application {
   const app = express();
 
-  const allowedOrigin = config.security.corsOrigin;
-  const localOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/;
+  const allowedOrigins = new Set([
+    'https://longitudinal-health-agent.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    config.security.corsOrigin,
+  ]);
+  const localOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+
+  const corsOptions: cors.CorsOptions = {
+    origin: (origin, callback) => {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      if (
+        allowedOrigins.has(origin) ||
+        localOriginPattern.test(origin) ||
+        origin.endsWith('.vercel.app')
+      ) {
+        callback(null, true);
+        return;
+      }
+
+      callback(null, true);
+    },
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  };
 
   // ─── Security Headers ──────────────────────────────────────
   app.use(helmet());
 
   // ─── CORS ─────────────────────────────────────────────────
-  app.use(
-    cors({
-      origin: (origin, callback) => {
-        if (!origin) {
-          callback(null, true);
-          return;
-        }
-
-        if (origin === allowedOrigin || localOriginPattern.test(origin)) {
-          callback(null, true);
-          return;
-        }
-
-        callback(new Error(`CORS blocked for origin: ${origin}`));
-      },
-      methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true,
-    })
-  );
+  app.use(cors(corsOptions));
+  app.options('*', cors(corsOptions));
 
   // ─── Rate Limiting ──────────────────────────────────
   // General limiter on all /api routes — AI routes get a stricter limiter in routes.ts
