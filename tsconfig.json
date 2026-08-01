@@ -24,17 +24,15 @@
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "moduleResolution": "node",
-    "baseUrl": ".",
     "paths": {
-      "@config/*": ["src/config/*"],
-      "@controllers/*": ["src/controllers/*"],
-      "@models/*": ["src/models/*"],
-      "@services/*": ["src/services/*"],
-      "@middlewares/*": ["src/middlewares/*"],
-      "@types-app/*": ["src/types/*"],
-      "@utils/*": ["src/utils/*"],
-      "@data/*": ["src/data/*"]
+      "@config/*": ["./src/config/*"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@models/*": ["./src/models/*"],
+      "@services/*": ["./src/services/*"],
+      "@middlewares/*": ["./src/middlewares/*"],
+      "@types-app/*": ["./src/types/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@data/*": ["./src/data/*"]
     }
   },
   "include": ["src/**/*", "scripts/**/*"],
