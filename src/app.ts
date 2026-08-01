@@ -87,6 +87,7 @@ export function createApp(): Application {
 
   // ─── API Routes ───────────────────────────────────────────
   app.use('/api', router);
+  app.use(router);
 
   // ─── 404 Handler ──────────────────────────────────────────
   app.use(notFoundHandler);

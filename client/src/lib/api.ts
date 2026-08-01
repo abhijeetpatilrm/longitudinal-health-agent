@@ -1,12 +1,21 @@
 import axios from 'axios';
 import { MOCK_TRENDS_DATA, MOCK_HEALTH_PLAN, MOCK_AUDIT_LOGS } from './mockData.ts';
 
+const getBaseUrl = () => {
+  let url = (import.meta.env.VITE_API_URL || 'http://localhost:3000/api').trim();
+  url = url.replace(/\/+$/, '');
+  if (!url.endsWith('/api')) {
+    url = `${url}/api`;
+  }
+  return url;
+};
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 5000,
+  timeout: 15000,
   withCredentials: true,
 });
 
