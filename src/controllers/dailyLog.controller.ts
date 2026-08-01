@@ -176,7 +176,10 @@ export async function getDailyLogByDate(
       date,
     }).lean();
 
-    if (!log) throw new NotFoundError(`DailyLog for date ${date}`);
+    if (!log) {
+      res.status(200).json({ success: true, data: null, message: `No log found for date ${date}` });
+      return;
+    }
 
     res.status(200).json({ success: true, data: log });
   } catch (err) {

@@ -296,8 +296,27 @@ class GeminiAiClient implements IAiClient {
       };
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      logger.error('[AI] Completion request failed after all retries.', { error: message });
-      throw new AppError(`AI completion failed: ${message}`, 502, 'AI_CLIENT_ERROR', { error: message });
+      logger.warn('[AI] Gemini completion failed, attempting fallback cascade...', { error: message });
+
+      const groqKey = process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY;
+      if (groqKey && !groqKey.startsWith('AQ.')) {
+        try {
+          const fallbackClient = new OpenAiClient({
+            apiKey: groqKey,
+            modelName: 'llama-3.3-70b-versatile',
+            maxTokens: this.options.maxTokens,
+            temperature: this.options.temperature,
+          });
+          logger.info('[AI] Successfully falling back to OpenAiClient (Groq).');
+          return await fallbackClient.complete(request);
+        } catch (fbErr) {
+          logger.warn('[AI] Groq fallback failed, falling back to offline mode.', { error: fbErr });
+        }
+      }
+
+      logger.info('[AI] Falling back to OfflineFallbackAiClient.');
+      const offlineClient = new OfflineFallbackAiClient();
+      return await offlineClient.complete(request);
     }
   }
 
@@ -352,10 +371,29 @@ class GeminiAiClient implements IAiClient {
 
       return { parsed, raw };
     } catch (err) {
-      if (err instanceof AppError) throw err;
+      if (err instanceof AppError && err.statusCode === 422) throw err;
       const message = err instanceof Error ? err.message : String(err);
-      logger.error('[AI] JSON-mode completion failed.', { error: message });
-      throw new AppError(`AI JSON completion failed: ${message}`, 502, 'AI_CLIENT_ERROR', { error: message });
+      logger.warn('[AI] Gemini JSON-mode completion failed, attempting fallback cascade...', { error: message });
+
+      const groqKey = process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY;
+      if (groqKey && !groqKey.startsWith('AQ.')) {
+        try {
+          const fallbackClient = new OpenAiClient({
+            apiKey: groqKey,
+            modelName: 'llama-3.3-70b-versatile',
+            maxTokens: this.options.maxTokens,
+            temperature: this.options.temperature,
+          });
+          logger.info('[AI] Successfully falling back to OpenAiClient (Groq).');
+          return await fallbackClient.completeWithJsonSchema<T>(request);
+        } catch (fbErr) {
+          logger.warn('[AI] Groq fallback failed, falling back to offline mode.', { error: fbErr });
+        }
+      }
+
+      logger.info('[AI] Falling back to OfflineFallbackAiClient for JSON mode.');
+      const offlineClient = new OfflineFallbackAiClient();
+      return await offlineClient.completeWithJsonSchema<T>(request);
     }
   }
 }
@@ -444,9 +482,11 @@ class OpenAiClient implements IAiClient {
         }
       };
     } catch (err) {
-      if (err instanceof AppError) throw err;
+      if (err instanceof AppError && err.statusCode === 422) throw err;
       const message = err instanceof Error ? err.message : String(err);
-      throw new AppError(`AI completion failed: ${message}`, 502, 'AI_CLIENT_ERROR', { error: message });
+      logger.warn('[AI] OpenAiClient completion failed, falling back to offline mode...', { error: message });
+      const offlineClient = new OfflineFallbackAiClient();
+      return await offlineClient.complete(request);
     }
   }
 
@@ -492,10 +532,11 @@ class OpenAiClient implements IAiClient {
 
       return { parsed, raw };
     } catch (err) {
-      if (err instanceof AppError) throw err;
+      if (err instanceof AppError && err.statusCode === 422) throw err;
       const message = err instanceof Error ? err.message : String(err);
-      logger.error('[AI] JSON-mode completion failed.', { error: message });
-      throw new AppError(`AI JSON completion failed: ${message}`, 502, 'AI_CLIENT_ERROR', { error: message });
+      logger.warn('[AI] OpenAiClient JSON-mode completion failed, falling back to offline mode...', { error: message });
+      const offlineClient = new OfflineFallbackAiClient();
+      return await offlineClient.completeWithJsonSchema<T>(request);
     }
   }
 }
