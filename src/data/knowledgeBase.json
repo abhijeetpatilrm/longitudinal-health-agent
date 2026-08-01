@@ -1,0 +1,92 @@
+[
+  {
+    "id": "KB-001",
+    "category": "NUTRITION",
+    "title": "Protein Intake and Satiety",
+    "evidence_summary": "Higher protein intake (1.6–2.2 g/kg body weight) is associated with greater satiety, reduced caloric intake, and preservation of lean mass during weight loss.",
+    "source_reference": "Morton RW et al. (2018). A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. British Journal of Sports Medicine.",
+    "applicable_conditions": ["obesity", "weight_management", "muscle_gain"],
+    "tags": ["protein", "satiety", "weight_loss", "body_composition"]
+  },
+  {
+    "id": "KB-002",
+    "category": "NUTRITION",
+    "title": "Mediterranean Diet and Cardiovascular Health",
+    "evidence_summary": "The Mediterranean diet pattern (high in vegetables, fruits, legumes, whole grains, olive oil, and fish; low in red meat and processed foods) is strongly associated with reduced cardiovascular risk.",
+    "source_reference": "Estruch R et al. (2018). Primary Prevention of Cardiovascular Disease with a Mediterranean Diet Supplemented with Extra-Virgin Olive Oil or Nuts. NEJM.",
+    "applicable_conditions": ["cardiovascular_disease", "hypertension", "diabetes_type2"],
+    "tags": ["mediterranean", "cardiovascular", "heart_health", "diet_pattern"]
+  },
+  {
+    "id": "KB-003",
+    "category": "ACTIVITY",
+    "title": "WHO Physical Activity Guidelines for Adults",
+    "evidence_summary": "Adults should do at least 150–300 minutes of moderate-intensity aerobic activity per week, or 75–150 minutes of vigorous-intensity. Additional strength training ≥2 days/week reduces all-cause mortality risk.",
+    "source_reference": "WHO (2020). WHO Guidelines on Physical Activity and Sedentary Behaviour.",
+    "applicable_conditions": ["general_health", "obesity", "cardiovascular_disease", "diabetes_type2"],
+    "tags": ["exercise", "aerobic", "strength_training", "who_guidelines"]
+  },
+  {
+    "id": "KB-004",
+    "category": "SLEEP",
+    "title": "Sleep Duration and Metabolic Health",
+    "evidence_summary": "Short sleep duration (<7 hours/night) is associated with increased risk of obesity, type 2 diabetes, and cardiovascular disease. Adults should aim for 7–9 hours per night.",
+    "source_reference": "Cappuccio FP et al. (2008). Meta-analysis of short sleep duration and obesity in children and adults. Sleep.",
+    "applicable_conditions": ["obesity", "diabetes_type2", "cardiovascular_disease", "fatigue"],
+    "tags": ["sleep", "metabolic_health", "obesity_risk", "recovery"]
+  },
+  {
+    "id": "KB-005",
+    "category": "HYDRATION",
+    "title": "Daily Water Intake Recommendations",
+    "evidence_summary": "The European Food Safety Authority recommends 2.0 L/day for women and 2.5 L/day for men from all beverage and food sources. Pre-meal water consumption (500 ml) may reduce caloric intake by ~13%.",
+    "source_reference": "EFSA (2010). Scientific opinion on dietary reference values for water. EFSA Journal.",
+    "applicable_conditions": ["general_health", "weight_management", "kidney_health"],
+    "tags": ["hydration", "water_intake", "weight_management"]
+  },
+  {
+    "id": "KB-006",
+    "category": "NUTRITION",
+    "title": "Fibre Intake and Gut Health",
+    "evidence_summary": "A diet high in dietary fibre (≥25–30 g/day) from whole grains, vegetables, and legumes improves glycaemic control, reduces LDL cholesterol, and supports a diverse gut microbiome.",
+    "source_reference": "Reynolds A et al. (2019). Carbohydrate quality and human health: a series of systematic reviews and meta-analyses. The Lancet.",
+    "applicable_conditions": ["diabetes_type2", "hypercholesterolemia", "ibs", "general_health"],
+    "tags": ["fibre", "gut_health", "glycaemic_control", "cholesterol"]
+  },
+  {
+    "id": "KB-007",
+    "category": "MENTAL_HEALTH",
+    "title": "Exercise and Depression / Anxiety",
+    "evidence_summary": "Regular aerobic exercise (3–5 sessions/week, 30–45 min) has a moderate-to-large effect on reducing depressive and anxiety symptoms, comparable to pharmacotherapy in mild-to-moderate cases.",
+    "source_reference": "Cooney GM et al. (2013). Exercise for depression. Cochrane Database of Systematic Reviews.",
+    "applicable_conditions": ["depression", "anxiety", "stress", "burnout"],
+    "tags": ["mental_health", "exercise_therapy", "depression", "anxiety"]
+  },
+  {
+    "id": "KB-008",
+    "category": "NUTRITION",
+    "title": "Reducing Ultra-Processed Food Consumption",
+    "evidence_summary": "Each 10% increment in ultra-processed food intake is associated with a 12% higher all-cause mortality risk. Replacing UPFs with whole foods improves nutrient density and weight outcomes.",
+    "source_reference": "Rico-Campà A et al. (2019). Association between consumption of ultra-processed foods and all cause mortality. BMJ.",
+    "applicable_conditions": ["obesity", "cardiovascular_disease", "general_health"],
+    "tags": ["ultra_processed", "whole_foods", "mortality_risk", "nutrition_quality"]
+  },
+  {
+    "id": "KB-009",
+    "category": "ACTIVITY",
+    "title": "Benefits of Walking 8,000–10,000 Steps/Day",
+    "evidence_summary": "Walking 8,000–10,000 steps/day is associated with significantly lower all-cause mortality and cardiovascular events compared to <4,000 steps/day, with benefits plateauing around 10,000.",
+    "source_reference": "Saint-Maurice PF et al. (2020). Association of Daily Step Count and Step Intensity with Mortality Among US Adults. JAMA.",
+    "applicable_conditions": ["cardiovascular_disease", "obesity", "sedentary_lifestyle"],
+    "tags": ["walking", "step_count", "cardiovascular", "mortality"]
+  },
+  {
+    "id": "KB-010",
+    "category": "SLEEP",
+    "title": "Sleep Hygiene and Circadian Alignment",
+    "evidence_summary": "Consistent sleep and wake times, limiting blue-light exposure 1 hour before bed, and keeping bedroom temperature at 16–18°C improve sleep latency and duration by aligning with circadian rhythm.",
+    "source_reference": "Irish LA et al. (2015). The role of sleep hygiene in promoting public health: A review of empirical evidence. Sleep Medicine Reviews.",
+    "applicable_conditions": ["insomnia", "poor_sleep_quality", "fatigue"],
+    "tags": ["sleep_hygiene", "circadian", "blue_light", "bedtime_routine"]
+  }
+]

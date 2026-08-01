@@ -1,0 +1,65 @@
+Act as a Principal Product Designer & Staff Frontend Engineer (20+ years FAANG/Dribbble-level UI engineering experience). 
+
+Transform our existing React + Tailwind dashboard (`/client`) into an ultra-premium, Dribbble/Cronometer-grade SaaS Health & AI Agent Portal ("PulseAI"). It must outshine 1,000+ competitors with polished visual hierarchy, custom SVG macro rings, micro-interactions, and flawless dynamic state binding.
+
+---
+
+### 🎯 DESIGN SYSTEM & AESTHETICS (CRONOMETER + DRIBBBLE STYLE)
+
+1. **Color Palette & Glassmorphism:**
+   - **Background:** Deep obsidian dark mode (`#0B1120`) or ultra-clean light mode with high-contrast card elevation.
+   - **Accent Colors:** Electric Emerald (`#10B981`), Cyber Cyan (`#06B6D4`), Coral Violet (`#8B5CF6`), and Warning Amber (`#F59E0B`).
+   - **Card Styling:** Rounded-2xl borders (`rounded-2xl`), subtle backdrop blur (`backdrop-blur-md bg-slate-900/60`), glowing hover shadows (`hover:shadow-emerald-500/10 transition-all duration-300`).
+
+2. **Visual Progress Ring Gauges (Reusable Component):**
+   - Build a sleek SVG Radial Progress Ring component for calorie intake and macro breakdown (showing `kcal consumed` in the center ring with colored arc meters for Protein, Carbs, and Fat, like Cronometer/MyNetDiary).
+
+3. **Typography & Badge Details:**
+   - Crisp font hierarchy, glowing pill badges (`[🤖 AI EXTRACTED]`, `[✏️ USER OVERRIDE]`, `[⚡ LIVE SYNC]`), and Lucide icons across every single metric card.
+
+---
+
+### 📱 TAB-BY-TAB UI REFACTOR & DYNAMIC STATE WIRING
+
+#### TAB 1: Daily Log & AI Meal Extractor (100% Dynamic Wiring)
+- **Top Summary Gauge Strip:**
+  - Radial Calorie Budget Ring in the center.
+  - Quick metric cards with animated progress bars for Sleep (hrs), Weight (kg), and Mood Gauge (with live emoji badge).
+- **Left Panel — AI Natural Language Ingestor:**
+  - Textarea bound to `noteText` state with pre-filled clickable sample pill buttons ("Had 2 eggs, avocado toast, and 30m run", "Chicken salad with rice, slept 8h").
+  - "Extract & Auto-Fill with AI" button with a spinning loader and pulse animation during `POST /api/logs/:userId/extract-meals`.
+- **Right Panel — Dynamic Extracted Meals Table:**
+  - Render extracted meals dynamically from API response (never hardcoded!).
+  - **Inline Editing & Manual Entry:** "+ Add Manual Meal" button opening an inline macro modal, plus edit/delete icons per meal item calling `PUT /api/logs/:logId/meals/:mealId/correct`.
+
+#### TAB 2: Analytics & Deterministic Trends
+- **Top KPI Cards:** 7-Day Caloric Avg, Sleep Consistency %, Weight Trajectory Delta ($\Delta$ kg), and Adherence Index (%).
+- **Interactive Recharts Visualizations:**
+  - **Weight Trajectory Chart:** Smooth area gradient with linear regression trajectory line.
+  - **Caloric & Macro Breakdown:** Stacked bar chart (Protein/Carbs/Fat) vs Target Goal baseline.
+  - **Sleep vs Mood Correlation:** Dual-axis smoothed line graph.
+- **Anomaly Banner:** Prominent warning card highlighting missing logging days or extreme data anomalies.
+
+#### TAB 3: Plan Retrospective & Review (Human-In-The-Loop Workflow)
+- **Header:** "Run 14-Day AI Retrospective" CTA button (`POST /api/plans/:userId/generate`).
+- **Narrative Retrospective Card:** Clean typographic summary of user performance over 14 days.
+- **Proposed Versioned Plan Grid:**
+  - Target metrics card (Calories, Protein, Activity, Sleep).
+  - Actionable Suggestions with **Expandable Evidence Citation Drawers** referencing `knowledgeBase.json`.
+- **Human Approval Modal:**
+  - Emerald **"Approve & Activate Version X"** CTA -> Hits `PUT /api/plans/:planId/approve`.
+  - Coral **"Reject / Request Changes"** CTA -> Modal collecting user feedback notes.
+
+#### TAB 4: Plan Version History & Agent Audit Trail
+- **Version Timeline:** Visual status badges (`ACTIVE`, `ARCHIVED`, `REJECTED`) across `v1.0`, `v2.0`.
+- **Audit Ledger Table:**
+  - Action types (`MEAL_EXTRACTION`, `PLAN_SUGGESTION`, `SAFETY_VIOLATION`, `USER_CORRECTED`).
+  - Uncertainty / Confidence Index progress bars (0-100%).
+  - Expandable JSON Inspector modal displaying raw AI prompt input vs final structured output payload.
+
+---
+
+### 📦 TECHNICAL REQUIREMENTS
+- Refactor components across `App.tsx`, `DailyLogTab.tsx`, `AnalyticsTab.tsx`, `RetrospectiveTab.tsx`, `AuditTab.tsx`, and `MacroRing.tsx`.
+- Ensure state binding is 100% reactive: changing sliders updates state immediately; typing custom meal text extracts dynamic macros from the API.
+- TypeScript strict typing with zero compiler or linter errors (`tsc --noEmit`).
