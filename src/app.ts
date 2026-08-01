@@ -53,7 +53,7 @@ export function createApp(): Application {
   app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
   // ─── Request Logging ──────────────────────────────────────
-  app.use((req: Request, _res, next) => {
+  app.use((req: Request, _res: Response, next: express.NextFunction) => {
     logger.debug(`→ ${req.method} ${req.path}`, {
       query: req.query,
       ip: req.ip,

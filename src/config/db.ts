@@ -22,7 +22,7 @@ export async function connectDatabase(): Promise<void> {
     await mongoose.connect(config.mongodb.uri, {
       serverSelectionTimeoutMS: 10_000,
       socketTimeoutMS: 45_000,
-    });
+    } as mongoose.ConnectOptions);
 
     isConnected = true;
     logger.info('[DB] Successfully connected to MongoDB.', {
